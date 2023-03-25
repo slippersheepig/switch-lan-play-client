@@ -1,2 +1,2 @@
 # switch-lan-play-client
-https://github.com/spacemeowx2/switch-lan-play
+docker run -d --net host sheepgreen/switch-lan-play-client --relay-server-addr example.com:11451
