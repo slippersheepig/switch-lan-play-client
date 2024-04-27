@@ -7,4 +7,4 @@ WORKDIR /usr/bin
 RUN wget -O /usr/bin/lan-play-linux https://github.com/spacemeowx2/switch-lan-play/releases/download/v$LANVERSION/lan-play-linux
 RUN chmod +x /usr/bin/lan-play-linux
 RUN apk del wget
-ENTRYPOINT ["lan-play-linux"]
+CMD ["lan-play-linux"]
