@@ -1,17 +1,14 @@
-FROM alpine:3.20 AS builder
+FROM alpine AS builder
 
 RUN apk add --no-cache \
     build-base \
     cmake \
     libpcap-dev \
     linux-headers \
-    unzip \
-    curl
+    git
 
 WORKDIR /src
-RUN curl -L -o /tmp/switch-lan-play-master.zip https://github.com/spacemeowx2/switch-lan-play/archive/refs/heads/master.zip \
- && unzip -q /tmp/switch-lan-play-master.zip -d /src \
- && mv /src/switch-lan-play-master /src/switch-lan-play
+RUN git clone --recursive https://github.com/spacemeowx2/switch-lan-play.git
 
 WORKDIR /build
 RUN cmake -DCMAKE_BUILD_TYPE=Release /src/switch-lan-play \
