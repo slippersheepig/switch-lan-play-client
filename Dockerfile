@@ -1,9 +1,27 @@
-FROM ubuntu
+FROM alpine:3.20 AS builder
 
-ENV LANVERSION=0.2.3
+RUN apk add --no-cache \
+    build-base \
+    cmake \
+    libpcap-dev \
+    linux-headers \
+    unzip \
+    curl
 
-RUN apt update && apt install libpcap-dev wget -y
-WORKDIR /usr/bin
-RUN wget -O /usr/bin/lan-play-linux https://github.com/spacemeowx2/switch-lan-play/releases/download/v$LANVERSION/lan-play-linux && chmod +x /usr/bin/lan-play-linux
-RUN apt autoremove wget -y
-ENTRYPOINT ["lan-play-linux"]
+WORKDIR /src
+RUN curl -L -o /tmp/switch-lan-play-master.zip https://github.com/spacemeowx2/switch-lan-play/archive/refs/heads/master.zip \
+ && unzip -q /tmp/switch-lan-play-master.zip -d /src \
+ && mv /src/switch-lan-play-master /src/switch-lan-play
+
+WORKDIR /build
+RUN cmake -DCMAKE_BUILD_TYPE=Release /src/switch-lan-play \
+ && make -j"$(nproc)" \
+ && strip /build/lan-play
+
+FROM alpine
+
+RUN apk add --no-cache libpcap libstdc++
+
+COPY --from=builder /build/lan-play /usr/local/bin/lan-play
+
+ENTRYPOINT ["lan-play"]
