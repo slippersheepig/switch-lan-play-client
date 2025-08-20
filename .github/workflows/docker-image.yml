@@ -2,6 +2,8 @@ name: ci
 
 on:
   workflow_dispatch:
+  repository_dispatch:
+    types: [upstream-updated]
 
 permissions:
   contents: read
