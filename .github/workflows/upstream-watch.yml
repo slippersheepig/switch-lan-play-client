@@ -63,6 +63,6 @@ jobs:
 
       - name: Trigger docker build workflow
         if: steps.decide.outputs.changed == 'yes'
-        uses: peter-evans/repository-dispatch@v3
+        uses: peter-evans/repository-dispatch@v4
         with:
           event-type: upstream-updated
